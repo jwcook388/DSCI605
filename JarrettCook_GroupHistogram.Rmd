@@ -1,0 +1,40 @@
+---
+title: "Group Histogram in R"
+author: "Jarrett Cook"
+date: "2025-05-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data description
+
+The data used in this lab is from Sampledata2.csv. The dataset consists of 12 years of crime rate data for the United States. There are a total of 3 variables in the dataset, which are described below:
+
+* Variable 1: State (all 50 States are included, from Alabama to Wyoming)
+* Variable 2: Year (12 years of data are included, from 2007 to 2018)
+* Variable 3: CrimeRate (crime rates are per 100,000 people)
+
+# Data wrangling
+
+Per the Module 6 assignment: Grouped Histogram in R, the following steps were taken with the provided code and output.  The printed result about the information on all the packages was hidden.
+
+* Step 1: Load the required packages in R.
+```{r, message=FALSE}
+# Load tidyverse and colorspace libraries
+library(tidyverse)
+library(colorspace)
+```
+* Step 2: Set working directory
+```{r}
+setwd("C:/Users/jarco/OneDrive/Documents/DSCI605")
+```
+* Step 3: Load and inspect the dataset
+```{r}
+# Load and inspect the dataset
+df <- read.csv("Sampledata2.csv")
+view(df)
+summary(df)
+```
