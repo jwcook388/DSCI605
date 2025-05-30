@@ -27,14 +27,63 @@ Per the Module 6 assignment: Grouped Histogram in R, the following steps were ta
 library(tidyverse)
 library(colorspace)
 ```
-* Step 2: Set working directory
+* Step 2: Set working directory.
 ```{r}
-setwd("C:/Users/jarco/OneDrive/Documents/DSCI605")
+setwd("~/DSCI605")
 ```
-* Step 3: Load and inspect the dataset
+* Step 3: Load and inspect the dataset. I used View() to inspect the dataset, but with 600 rows, I chose to show the head and tail along with the structure and summary.
 ```{r}
 # Load and inspect the dataset
 df <- read.csv("Sampledata2.csv")
-view(df)
+str(df)
+head(df)
+tail(df)
 summary(df)
 ```
+* Step 4: Break the variable "CrimeRate" into three groups based on the crime rate range of <250, >500, or between 250 and 500 and put these groups under the new variable "RangeGroup."
+```{r}
+# Break the variable “CrimeRate” into three groups based on the range and create a new variable “RangeGroup”. You can use case_when() function.
+df2 <- df %>% 
+  mutate(RangeGroup = case_when(CrimeRate < 250 ~ "CrimeRate < 250",
+                          250 <= CrimeRate & CrimeRate <= 500 ~ "250 <= CrimeRate <=500",
+                          CrimeRate > 500 ~ "CrimeRate > 500"))
+
+# Verify this worked by checking head() and tail(). Again, I used View(df2) but chose not to display all 600 rows.
+head(df2)
+tail(df2)
+```
+* Step 5: Create two color vectors.
+```{r, echo=TRUE}
+# Create the first color vector using colorspace.
+n <- length(unique(df2$Year))
+col1=colorspace::diverge_hcl(n)
+
+# Create the second color vector using the colors green, blue, and red.
+col2=c("green","blue","red")
+```
+* Step 6: Plot the first histogram.
+```{r, echo=TRUE}
+# Plot a histogram of the variable “CrimateRate” and fill with the variable “Year”. Use the first color vector col1 for this graph.
+df2 %>% 
+  ggplot(aes(x=CrimeRate, color=as.factor(Year), fill=as.factor(Year))) +
+  geom_histogram(position = "dodge", alpha=0.5, bins=10) +
+  scale_color_manual(values=col1) +
+  scale_fill_manual(values=col1) +
+  labs(title="Crime Rate Histogram Plot #1", x="Crime rate per 100,000 people", y="Count") +
+  guides(col=guide_legend("Year"), fill=guide_legend("Year")) +
+  theme_classic()
+```
+
+* Step 7: Plot the second histogram.
+```{r, echo=TRUE}
+# Plot a histogram of the variable “CrimeRate” and fill with the variable “RangeGroup”, which you created in Step3. Please use second color vector col2 for this graph.
+df2 %>% 
+  ggplot(aes(x=CrimeRate, color=as.factor(RangeGroup), fill=as.factor(RangeGroup))) +
+  geom_histogram(position = "dodge", alpha=0.5, bins=10) +
+  scale_color_manual(values=col2) +
+  scale_fill_manual(values=col2) +
+  labs(title="Crime Rate Histogram Plot #2", x="Crime rate per 100,000 people", y="Count") +
+  guides(col=guide_legend("RangeGroup"), fill=guide_legend("RangeGroup")) +
+  theme_classic()
+```
+
